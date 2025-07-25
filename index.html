@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>To-Do List </title>
+  <link rel="stylesheet" href="light.css" id="theme-link">
+  <link rel="stylesheet" href="responsive.css">
+  <meta name="theme-color" content="#181c22" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- THEME TOGGLE -->
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round"></div>
+      </label>
+      <em>Enable Dark Mode</em>
+    </div>
+
+    <!-- Authentication View -->
+    <div id="auth-view" class="auth-view">
+      <h1>Welcome to Planora</h1>
+      <div id="auth-msg" class="auth-msg"></div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-container">
+        <form id="login-form" autocomplete="off">
+          <h2>Login</h2>
+          <input type="email" id="login-email" placeholder="Email" required autocomplete="username" />
+          <input type="password" id="login-password" placeholder="Password" required minlength="6"
+            autocomplete="current-password" />
+          <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <button id="show-register" class="form-toggle-btn" type="button">Register
+            here</button></p>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="register-container" style="display:none;">
+        <form id="register-form" autocomplete="off">
+          <h2>Register</h2>
+          <input type="email" id="reg-email" placeholder="Email" required autocomplete="username" />
+          <input type="password" id="reg-password" placeholder="Password" required minlength="6"
+            autocomplete="new-password" />
+          <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <button id="show-login" class="form-toggle-btn" type="button">Login here</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- To-Do App View -->
+    <div id="app-view" class="app-view" style="display:none;">
+
+      <header>
+        <div class="header-left">
+          <h1 id="username-display">My To-Do List</h1>
+          <button id="edit-profile-btn" title="Edit Profile">⚙️</button>
+        </div>
+        <button id="logout-btn" title="Logout">Logout</button>
+      </header>
+
+      <!-- Profile Modal -->
+      <div id="profile-modal" class="modal">
+        <div class="modal-content modal-sm">
+          <span class="close-modal" id="close-profile-modal">&times;</span>
+          <h2>Edit Profile</h2>
+          <form id="profile-form" autocomplete="off">
+            <label for="username-input">Username</label>
+            <input type="text" id="username-input" maxlength="30" placeholder="Enter username" />
+            <button type="submit">Save Profile</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Add Task Form -->
+      <form id="task-form" autocomplete="off">
+        <input type="text" id="task-input" placeholder="Add new task..." autocomplete="off" />
+        <select id="priority-select" aria-label="Select priority">
+          <option value="low">Low Priority</option>
+          <option value="medium" selected>Medium Priority</option>
+          <option value="high">High Priority</option>
+        </select>
+        <input type="text" id="category-input" placeholder="New category or existing" autocomplete="off" />
+        <input type="date" id="due-date" />
+        <select id="recurrence-select" aria-label="Recurrence" title="Set recurrence">
+          <option value="none" selected>Does not repeat</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+        <!-- ...existing task fields... -->
+
+        <label for="task-notes-input" style="margin-top:6px;">Notes</label>
+        <textarea id="task-notes-input" rows="2" placeholder="Add notes (optional)"
+          style="margin-bottom:10px;"></textarea>
+
+        <label for="new-subtask-input" style="margin-top:6px;">Subtasks</label>
+        <div style="display:flex;gap:6px;margin-bottom:6px;">
+          <input type="text" id="new-subtask-input" placeholder="Add a subtask" autocomplete="off" />
+          <button type="button" id="add-subtask-btn">+</button>
+        </div>
+        <ul id="subtasks-list-preview" class="task-subtasks-list" style="margin-bottom:8px;"></ul>
+
+        <button type="submit">Add Task</button>
+        <span id="form-msg"></span>
+      </form>
+
+      <!-- Filters and Search -->
+      <div class="filter-section">
+        <input type="search" id="search-input" placeholder="Search tasks..." aria-label="Search tasks" />
+        <select id="filter-completed" aria-label="Filter by completion">
+          <option value="all" selected>All Tasks</option>
+          <option value="completed">Completed</option>
+          <option value="incomplete">Incomplete</option>
+        </select>
+        <select id="filter-priority" aria-label="Filter by priority">
+          <option value="all" selected>All Priorities</option>
+          <option value="high">High Priority</option>
+          <option value="medium">Medium Priority</option>
+          <option value="low">Low Priority</option>
+        </select>
+        <select id="filter-category" aria-label="Filter by category">
+          <option value="all" selected>All Categories</option>
+          <!-- dynamic category options here -->
+        </select>
+        <select id="sort-option" aria-label="Sort tasks">
+          <option value="created">Sort by Creation Date</option>
+          <option value="dueDate">Sort by Due Date</option>
+          <option value="priority">Sort by Priority</option>
+        </select>
+      </div>
+
+      <!-- Bulk Action Controls -->
+      <div id="bulk-actions" class="bulk-actions" style="display:none;">
+        <label><input type="checkbox" id="select-all-tasks" /> Select All</label>
+        <button id="bulk-complete-btn" title="Mark Selected as Completed">✔️ Complete</button>
+        <button id="bulk-delete-btn" title="Delete Selected Tasks">🗑️ Delete</button>
+      </div>
+
+      <!-- Task progress bar -->
+      <div class="progress-container" aria-label="Task completion progress">
+        <div id="progress-bar"></div>
+        <span id="progress-text"></span>
+      </div>
+
+      <ul id="tasks-list" aria-live="polite" aria-atomic="true"></ul>
+
+      <!-- Edit Task Modal -->
+      <div id="edit-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-modal" id="close-modal">&times;</span>
+          <h2>Edit Task</h2>
+          <form id="edit-form" autocomplete="off">
+            <label for="edit-task-input">Task</label>
+            <input type="text" id="edit-task-input" required />
+
+            <label for="edit-priority-select">Priority</label>
+            <select id="edit-priority-select">
+              <option value="low">Low Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="high">High Priority</option>
+            </select>
+
+            <label for="edit-category-input">Category</label>
+            <input type="text" id="edit-category-input" placeholder="Add or change category" />
+
+            <label for="edit-due-date">Due Date</label>
+            <input type="date" id="edit-due-date" />
+
+            <label for="edit-recurrence-select">Recurrence</label>
+            <select id="edit-recurrence-select">
+              <option value="none">Does not repeat</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+
+            <label for="edit-notes-textarea">Notes</label>
+            <textarea id="edit-notes-textarea" rows="4" placeholder="Add notes here..."></textarea>
+
+            <div id="subtasks-container">
+              <label>Subtasks</label>
+              <ul id="subtasks-list"></ul>
+              <input type="text" id="new-subtask-input" placeholder="Add a subtask" />
+              <button type="button" id="add-subtask-btn">Add Subtask</button>
+            </div>
+
+            <button type="submit">Save Changes</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
