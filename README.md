@@ -1,4 +1,7 @@
 Planora
+
+Website : https://sjshreya-planora.netlify.app/
+
 A modern, user-friendly, and customizable to-do list web app for efficient daily planning and productivity.
 
 Features
